@@ -23,7 +23,7 @@ type AuthService struct {
 	wg         sync.WaitGroup
 }
 
-func New(addr, signingKey string, storage store.Storer) (*AuthService, error) {
+func New(signingKey string, storage store.Storer) (*AuthService, error) {
 	manager := token.New(signingKey)
 	return &AuthService{manager, storage, sync.WaitGroup{}}, nil
 }

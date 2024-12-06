@@ -32,7 +32,7 @@ func main() {
 	}
 
 	//Create and run the service
-	authService, err := service.New("localhost:8080", os.Args[1], storage)
+	authService, err := service.New(os.Args[1], storage)
 	if err != nil {
 		panic(err)
 	}

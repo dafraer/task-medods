@@ -14,13 +14,12 @@ import (
 )
 
 const (
-	testAddr       = "localhost:8080"
 	testSigningKey = "very_secret_key"
 )
 
 func TestHandleGenerate(t *testing.T) {
 	//Create a new service for testing
-	s, err := New(testAddr, testSigningKey, store.NewMockStore())
+	s, err := New(testSigningKey, store.NewMockStore())
 	assert.NoError(t, err)
 
 	//Create test server
@@ -43,7 +42,7 @@ func TestHandleGenerate(t *testing.T) {
 
 func TestHandleRefresh(t *testing.T) {
 	//Create a new service for testing
-	s, err := New(testAddr, testSigningKey, store.NewMockStore())
+	s, err := New(testSigningKey, store.NewMockStore())
 	assert.NoError(t, err)
 
 	//Create test server
