@@ -1,6 +1,7 @@
 package token
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -60,7 +61,8 @@ func (maker *JWTManager) Verify(tokenString string) (*CustomClaims, error) {
 		}
 		return []byte(maker.signingKey), nil
 	})
-	if err != nil {
+	//Ignore TokenExpired error because we are refreshing access token
+	if err != nil && !errors.Is(err, jwt.ErrTokenExpired) {
 		return nil, err
 	}
 
