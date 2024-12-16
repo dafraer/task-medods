@@ -36,7 +36,25 @@ func (s *AuthService) Run(ctx context.Context, address string) error {
 	//Two REST routes: one for generating a pair of access and refresh tokens
 	http.HandleFunc("/generate", s.handleGenerate)
 	http.HandleFunc("/refresh", s.handleRefresh)
-	if err := srv.ListenAndServe(); err != nil {
+	ch := make(chan error)
+	go func() {
+		defer close(ch)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			ch <- err
+			return
+		}
+		ch <- nil
+	}()
+	select {
+	case <-ctx.Done():
+		if err := srv.Shutdown(context.Background()); err != nil {
+			return err
+		}
+		err := <-ch
+		if err != nil {
+			return err
+		}
+	case err := <-ch:
 		return err
 	}
 	s.wg.Wait()
