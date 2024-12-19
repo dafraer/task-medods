@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net"
@@ -39,7 +40,7 @@ func (s *AuthService) Run(ctx context.Context, address string) error {
 	ch := make(chan error)
 	go func() {
 		defer close(ch)
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			ch <- err
 			return
 		}
